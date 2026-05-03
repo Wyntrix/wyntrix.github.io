@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WYNTRIX — Decode the Market. Multiply the Gains.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Rajdhani:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #060c18;
+      --navy2: #0b1527;
+      --panel: #0f1e35;
+      --cyan: #00d4ff;
+      --cyan2: #0099cc;
+      --gold: #f5a623;
+      --gold2: #c47f0a;
+      --white: #e8f4ff;
+      --muted: #4a6a8a;
+      --border: rgba(0,212,255,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── GRID OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(6,12,24,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo svg { width: 36px; height: 36px; }
+
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+
+    .nav-cta {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 8px 24px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      padding: 6px 18px;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 40px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* M logo SVG in hero */
+    .hero-logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 32px;
+      animation: fadeUp 1s ease 0.1s both;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 900;
+      letter-spacing: 8px;
+      line-height: 1;
+      margin-bottom: 20px;
+      animation: fadeUp 1s ease 0.2s both;
+      background: linear-gradient(135deg, #e8f4ff 40%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-divider {
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      margin: 0 auto 20px;
+      animation: fadeUp 1s ease 0.3s both;
+    }
+
+    .hero-tagline {
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 60px;
+      animation: fadeUp 1s ease 0.4s both;
+    }
+
+    .hero-tagline span { color: var(--cyan); }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 1s ease 0.5s both;
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      padding: 14px 40px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,212,255,0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--border);
+      padding: 14px 40px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* scrolling ticker */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,212,255,0.03);
+      padding: 12px 0;
+      margin-top: 80px;
+      animation: fadeUp 1s ease 0.6s both;
+    }
+
+    .ticker {
+      display: flex;
+      gap: 60px;
+      animation: ticker 20s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .ticker-item .up { color: #00e676; }
+    .ticker-item .dn { color: #ff5252; }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─── STATS ─── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 80px 48px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-item {
+      background: var(--navy2);
+      padding: 40px 32px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .stat-item:hover { background: var(--panel); }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--cyan);
+      line-height: 1;
+    }
+
+    .stat-num span { color: var(--gold); }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* ─── SECTION ─── */
+    section {
+      padding: 100px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-tag {
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 30px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      max-width: 700px;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--cyan);
+    }
+
+    /* ─── SERVICES ─── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    .service-card {
+      background: var(--navy2);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+      cursor: default;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--cyan);
+      transition: height 0.4s ease;
+    }
+
+    .service-card:hover::before { height: 100%; }
+    .service-card:hover { background: var(--panel); }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 1.4rem;
+    }
+
+    .service-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .service-num {
+      position: absolute;
+      top: 24px; right: 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--border);
+      letter-spacing: 2px;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-section {
+      background: var(--navy2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      margin-top: 60px;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+
+    .step {
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .step-circle {
+      width: 64px;
+      height: 64px;
+      border: 1px solid var(--cyan);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--cyan);
+      background: var(--navy);
+      position: relative;
+      z-index: 1;
+    }
+
+    .step h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    /* ─── MARKETS ─── */
+    .markets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 60px;
+    }
+
+    .market-tag {
+      border: 1px solid var(--border);
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: all 0.3s;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .market-tag:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,212,255,0.05);
+    }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      margin: 0 48px 80px;
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 20px;
+    }
+
+    .cta-section p {
+      color: var(--muted);
+      font-size: 1rem;
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+    }
+
+    .footer-disclaimer {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--cyan); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      section { padding: 60px 20px; }
+      .stats { margin: 60px 20px 0; }
+      .cta-section { margin: 0 20px 60px; }
+      footer { padding: 30px 20px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="2,32 18,6 34,32" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+      <polyline points="2,32 10,18 18,26 26,18 34,32" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+      <circle cx="18" cy="6" r="3" fill="#f5a623"/>
+    </svg>
+    <span class="nav-logo-text">WYNTRIX</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#markets">Markets</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Get Started</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">■ Forex &amp; Crypto Advisory</div>
+
+  <svg class="hero-logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="2" y="2" width="116" height="116" rx="16" fill="#0b1527" stroke="#00d4ff" stroke-width="1"/>
+    <polygon points="10,105 60,20 110,105" fill="none" stroke="#00d4ff" stroke-width="2"/>
+    <polyline points="10,105 32,65 60,85 88,65 110,105" fill="none" stroke="#00d4ff" stroke-width="2"/>
+    <circle cx="60" cy="20" r="7" fill="#f5a623"/>
+    <circle cx="60" cy="20" r="3" fill="#fff"/>
+    <circle cx="32" cy="65" r="3" fill="#00d4ff" opacity="0.6"/>
+    <circle cx="88" cy="65" r="3" fill="#00d4ff" opacity="0.6"/>
+    <circle cx="60" cy="85" r="3" fill="#00d4ff" opacity="0.6"/>
+    <line x1="60" y1="13" x2="60" y2="5" stroke="#f5a623" stroke-width="2"/>
+    <line x1="56" y1="9" x2="64" y2="9" stroke="#f5a623" stroke-width="2"/>
+  </svg>
+
+  <h1>WYNTRIX</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-tagline">Decode the Market. <span>Multiply</span> the Gains.</p>
+
+  <div class="hero-buttons">
+    <a href="#services" class="btn-primary">Explore Services</a>
+    <a href="#contact" class="btn-secondary">Join Now</a>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item">EUR/USD <span class="up">▲ 1.0842 +0.12%</span></span>
+      <span class="ticker-item">BTC/USD <span class="up">▲ 62,450 +2.41%</span></span>
+      <span class="ticker-item">GBP/USD <span class="dn">▼ 1.2631 -0.08%</span></span>
+      <span class="ticker-item">ETH/USD <span class="up">▲ 3,210 +1.87%</span></span>
+      <span class="ticker-item">USD/JPY <span class="up">▲ 153.42 +0.23%</span></span>
+      <span class="ticker-item">XAU/USD <span class="up">▲ 2,338 +0.54%</span></span>
+      <span class="ticker-item">SOL/USD <span class="up">▲ 178.3 +3.22%</span></span>
+      <span class="ticker-item">AUD/USD <span class="dn">▼ 0.6543 -0.15%</span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">EUR/USD <span class="up">▲ 1.0842 +0.12%</span></span>
+      <span class="ticker-item">BTC/USD <span class="up">▲ 62,450 +2.41%</span></span>
+      <span class="ticker-item">GBP/USD <span class="dn">▼ 1.2631 -0.08%</span></span>
+      <span class="ticker-item">ETH/USD <span class="up">▲ 3,210 +1.87%</span></span>
+      <span class="ticker-item">USD/JPY <span class="up">▲ 153.42 +0.23%</span></span>
+      <span class="ticker-item">XAU/USD <span class="up">▲ 2,338 +0.54%</span></span>
+      <span class="ticker-item">SOL/USD <span class="up">▲ 178.3 +3.22%</span></span>
+      <span class="ticker-item">AUD/USD <span class="dn">▼ 0.6543 -0.15%</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats reveal">
+  <div class="stat-item">
+    <div class="stat-num">5K<span>+</span></div>
+    <div class="stat-label">Active Members</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">89<span>%</span></div>
+    <div class="stat-label">Signal Accuracy</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">12<span>+</span></div>
+    <div class="stat-label">Markets Covered</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">24<span>/7</span></div>
+    <div class="stat-label">Live Support</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">What We Offer</div>
+  <h2 class="section-title">Advisory services built for <em>serious</em> traders.</h2>
+
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">📈</div>
+      <h3>Forex Signals</h3>
+      <p>Precision entry/exit signals on major and exotic currency pairs, backed by institutional-grade technical analysis and macro insights.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">₿</div>
+      <h3>Crypto Advisory</h3>
+      <p>Real-time alerts on BTC, ETH, and top altcoins. Spot and futures signals with risk-managed setups for volatile market conditions.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">📊</div>
+      <h3>Market Analysis</h3>
+      <p>Daily and weekly deep-dive reports covering price action, on-chain data, and macro trends that move the global markets.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">🎓</div>
+      <h3>Trading Education</h3>
+      <p>From beginner fundamentals to advanced strategies — structured courses that transform how you decode and trade the market.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">🛡️</div>
+      <h3>Risk Management</h3>
+      <p>Capital protection strategies, position sizing tools, and drawdown controls to ensure long-term sustainability in trading.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">💬</div>
+      <h3>Private Community</h3>
+      <p>Access to an exclusive trader community with live discussions, mentorship calls, and peer support from experienced professionals.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-tag">The Process</div>
+  <h2 class="section-title">How <em>Wyntrix</em> works for you.</h2>
+
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-circle">01</div>
+      <h4>Join</h4>
+      <p>Create your account and select a plan that matches your trading goals and experience level.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">02</div>
+      <h4>Receive Signals</h4>
+      <p>Get real-time alerts on Telegram or our dashboard with clear entry, stop-loss, and target levels.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">03</div>
+      <h4>Analyze</h4>
+      <p>Review supporting analysis, market context, and reasoning behind every signal we send.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">04</div>
+      <h4>Execute</h4>
+      <p>Place trades with confidence using our risk parameters and manage positions with expert guidance.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">05</div>
+      <h4>Multiply</h4>
+      <p>Track your performance, refine your edge, and watch your capital compound consistently over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section id="markets">
+  <div class="section-tag">Coverage</div>
+  <h2 class="section-title">Markets we <em>decode</em> daily.</h2>
+
+  <div class="markets-grid reveal">
+    <div class="market-tag">EUR/USD</div>
+    <div class="market-tag">GBP/USD</div>
+    <div class="market-tag">USD/JPY</div>
+    <div class="market-tag">AUD/USD</div>
+    <div class="market-tag">USD/CHF</div>
+    <div class="market-tag">NZD/USD</div>
+    <div class="market-tag">Bitcoin</div>
+    <div class="market-tag">Ethereum</div>
+    <div class="market-tag">Solana</div>
+    <div class="market-tag">BNB</div>
+    <div class="market-tag">XRP</div>
+    <div class="market-tag">Gold (XAU)</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section reveal" id="contact">
+  <div class="section-tag" style="justify-content:center">Get Started</div>
+  <h2>Ready to <em style="color:var(--cyan);font-style:italic">decode</em> the market?</h2>
+  <p>Join thousands of traders who trust Wyntrix for consistent, data-driven advisory.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <a href="https://wa.me/919111044810" target="_blank" class="btn-primary">💬 WhatsApp Us</a>
+    <a href="tel:+919111044810" class="btn-secondary">📞 +91 91110 44810</a>
+  </div>
+  <p style="margin-top:24px;font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--cyan);letter-spacing:2px;">+91 91110 44810</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">WYNTRIX</div>
+  <div class="footer-disclaimer">
+    Trading involves significant risk of loss. All signals and advisory content are for educational purposes only and do not constitute financial advice. Past performance is not indicative of future results.
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Disclaimer</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+
+  // Smooth nav active state
+  const links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    const pos = window.scrollY + 120;
+    links.forEach(link => {
+      const sec = document.querySelector(link.getAttribute('href'));
+      if (sec && sec.offsetTop <= pos && sec.offsetTop + sec.offsetHeight > pos) {
+        links.forEach(l => l.style.color = '');
+        link.style.color = 'var(--cyan)';
+      }
+    });
+  });
+</script>
+</body>
+</html>
